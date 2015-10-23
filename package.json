@@ -1,0 +1,21 @@
+{
+  "name": "lambda-server",
+  "version": "0.9.0",
+  "description": "Module for generic initalization of lambda processes and requests",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "keywords": [
+    "AWS",
+    "Lambda"
+  ],
+  "author": "Mikael Puittinen/SC5 Online Oy",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "expect": "^1.12.1",
+    "mocha": "^2.3.3"
+  }
+}
