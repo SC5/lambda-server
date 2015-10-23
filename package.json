@@ -12,10 +12,17 @@
   ],
   "author": "Mikael Puittinen/SC5 Online Oy",
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "expect": "^1.12.1",
     "mocha": "^2.3.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SC5/lambda-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SC5/lambda-server/issues"
+  },
+  "homepage": "https://github.com/SC5/lambda-server"
 }
