@@ -51,7 +51,6 @@ function initFn(options) {
     if (process.env.VERBOSE) {       
         console.log('Initialize ' + functionInfo.functionName + ' version ' + functionInfo.version + ' in stack ' + process.env.STACK_NAME || '<unknown>');
     }    
-    console.log('STACK_NAME (init) : ' + process.env.STACK_NAME);
     initialized = true;
     return module;
 }
