@@ -1,6 +1,11 @@
 var expect = require('expect');
 var lambdaServer = require('./index.js');
 var sampleFunction = require('./sampleFunction.js');
+var sampleError = require('./sampleError.js');
+
+var myErrorHandler = function(error, callbackFn) {
+    callbackFn(error + '-MOD');
+}
 
 describe('lambda-server', function() {
     describe('lambda-server.init', function() {
@@ -50,13 +55,33 @@ describe('lambda-server', function() {
                 },
                 fail: done
             });
+
         });
+        
+        it('Allows registration of alternative error Handler', function(done) {
+            process.env['AWS_LAMBDA_FUNCTION_NAME'] = '';
+            process.env['STACK_NAME'] = 'envstack'
+            lambdaServer.init({ 
+                lambdaFunction: sampleError,
+                errorHandler: myErrorHandler });   
+            lambdaServer.handler({message : 'TEST_ERROR'}, {
+                succeed: function() {
+                    done('EXPECTED_ERROR')
+                },
+                fail: function(error) {
+                    expect(error).toEqual('TEST_ERROR-MOD');
+                    done();
+                }
+            });            
+        })
 
         it('Returns an error if AWS_LAMBDA_FUNCTION_NAME and STACK_NAME are both unset', function(done) {
             delete process.env['AWS_LAMBDA_FUNCTION_NAME'];
             delete process.env['STACK_NAME'];
-            lambdaServer.init({ lambdaFunction: sampleFunction });
-            lambdaServer.handler({}, {
+            lambdaServer.init({ 
+                lambdaFunction: sampleFunction
+            });
+            lambdaServer.handler({message : 'TEST_ERROR'}, {
                 succeed: function() {
                     done('EXPECTED_ERROR')
                 },
@@ -65,6 +90,8 @@ describe('lambda-server', function() {
                 }
             });
         });
+
+
     });
 
     describe('lambda-server.handleRequest (handle)', function() {

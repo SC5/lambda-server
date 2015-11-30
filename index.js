@@ -3,6 +3,9 @@ var request_cnt = null;
 var pkg = require('./package.json');
 var functionHandler;
 var initialized = false;
+var errorHandler = function(error, callback) {
+    return callback(error);
+};
 
 function parseLambdaFunctionInfo() {
     var functionName = process.env.AWS_LAMBDA_FUNCTION_NAME || '';
@@ -43,6 +46,10 @@ function initFn(options) {
     }
     lambdaFunction = options.lambdaFunction;
 
+    if (options.errorHandler) {
+        errorHandler = options.errorHandler;
+    }
+
     if (! process.env.STACK_NAME) {
         if (functionInfo.stackName) {
             process.env['STACK_NAME'] = functionInfo.stackName;
@@ -71,12 +78,12 @@ function handlerFn(event, context) {
 
     initRequest(function(err) {
         if (err) {
-            return context.fail(err);
+            return errorHandler(err, context.fail);
         }
 
         lambdaFunction.handleRequest(event, function(err, response) {
             if (err) {
-                return context.fail(err);
+                return errorHandler(err, context.fail);
             }
             return context.succeed(response);
         });

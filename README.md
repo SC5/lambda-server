@@ -45,6 +45,25 @@ The index.js for your lambda-server based service would be e.g.
   };
 ```
 
+An alternative error handler can be registered (e.g. for logging / notifications) by passing the error handler function in 'errorHandler' during lambda-server-init. e.g.
+
+```javascript
+  var server = require('lambda-server');
+  var lambdaFunction = require('./lambdaFunction.js');
+  var myErrorHandler = function(error, callback) {
+    call_your_logging_function_here(error, callback);
+  }
+
+  server.init({
+      lambdaFunction: lambdaFunction,
+      errorHandler: myErrorHandler
+  });
+
+  module.exports = exports = {
+      handler : server.handler
+  };
+```
+
 ## TODO
 
 Ideas for future versions:
@@ -55,6 +74,7 @@ Ideas for future versions:
 
 ## Release History
 
+* 2015/11/30 - v0.9.1 - Added capability to register alternative error Handler
 * 2015/10/23 - v0.9.0 - Initial version of module
 
 ## License
