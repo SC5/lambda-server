@@ -6,12 +6,14 @@ var initialized = false;
 var errorHandler = function(error, callback) {
     return callback(error);
 };
+var lambdainfo = {};
 
 function parseLambdaFunctionInfo() {
     var functionName = process.env.AWS_LAMBDA_FUNCTION_NAME || '';
-    var lambdaInfo = {
+    lambdaInfo = {
         'stackName' : null,
         'baseName' : functionName,
+        'fullName' : functionName,
         'functionName' : pkg.name,
         'version': pkg.version,
     };
@@ -75,19 +77,28 @@ function handlerFn(event, context) {
     if (! initialized) {
         context.fail("lambda-server not initialized");
     }
-
-    initRequest(function(err) {
-        if (err) {
-            return errorHandler(err, context.fail);
-        }
-
-        lambdaFunction.handleRequest(event, function(err, response) {
+    try {
+        initRequest(function(err) {
             if (err) {
                 return errorHandler(err, context.fail);
             }
-            return context.succeed(response);
+                lambdaFunction.handleRequest(event, function(err, response) {
+                    if (err) {
+                        return errorHandler(err, context.fail);
+                    }
+                    return context.succeed(response);
+                });
+
         });
-    });
+    } catch (ex) {
+        console.error('EXCEPTION');
+        console.error(JSON.stringify({
+            stack: new Error().stack,
+            event: event
+        }, null, 2)); 
+        
+        errorHandler('Exception from ' + lambdaInfo.fullName + ' : ' + ex, context.fail);
+    }
 }
 
 module.exports = exports = {

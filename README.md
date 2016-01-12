@@ -74,6 +74,7 @@ Ideas for future versions:
 
 ## Release History
 
+* 2016/01/12 - v0.9.2 - Invoke errorHandler also on Exceptions
 * 2015/11/30 - v0.9.1 - Added capability to register alternative error Handler
 * 2015/10/23 - v0.9.0 - Initial version of module
 
